@@ -13,6 +13,11 @@ public class Zocalo {
     private String ip;
     private int puerto;
 
+    public Zocalo(String ip, int puerto) {
+        this.ip = ip;
+        this.puerto = puerto;
+    }
+    
     public String getIp() {
         return ip;
     }

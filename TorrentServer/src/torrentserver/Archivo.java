@@ -37,4 +37,8 @@ public class Archivo {
     public float getPeso() {
         return peso;
     }
+    
+    private String setHash(){
+        return "Hash";
+    }
 }

@@ -5,6 +5,7 @@
  */
 package torrentserver;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -16,6 +17,12 @@ public class Torrent {
     List<Zocalo> zocalos;
 
     public Torrent() {
+        this.zocalos = new ArrayList<>();
+    }
+    
+    public Torrent(Archivo archivo) {
+        this.archivo = archivo;
+        this.zocalos = new ArrayList<>();
     }
 
     public void setArchivo(Archivo archivo) {
@@ -24,5 +31,14 @@ public class Torrent {
 
     public void setZocalos(List<Zocalo> zocalos) {
         this.zocalos = zocalos;
+    }
+    
+    public void anadirZocalo( String ip, int puerto){
+        Zocalo z = new Zocalo(ip, puerto);
+        this.zocalos.add(z);
+    }
+    
+    public void anadirZocalo( Zocalo zocalo){
+        this.zocalos.add(zocalo);
     }
 }
