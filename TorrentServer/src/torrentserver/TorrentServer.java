@@ -17,11 +17,9 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class TorrentServer implements Runnable{
 
-    ConcurrentHashMap<Archivo, Torrent> directorio;
     Directorio manejadorDirectorio = new Directorio();
 
     public TorrentServer() {
-        directorio = manejadorDirectorio.load();
     }
         
     /**
