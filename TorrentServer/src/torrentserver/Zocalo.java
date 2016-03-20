@@ -11,8 +11,13 @@ package torrentserver;
  */
 public class Zocalo {
     private String ip;
-    private int puerto;
+    private String puerto;
 
+    public Zocalo(String ip, String puerto) {
+        this.ip = ip;
+        this.puerto = puerto;
+    }
+    
     public String getIp() {
         return ip;
     }
@@ -21,11 +26,11 @@ public class Zocalo {
         this.ip = ip;
     }
 
-    public int getPuerto() {
+    public String getPuerto() {
         return puerto;
     }
 
-    public void setPuerto(int puerto) {
+    public void setPuerto(String puerto) {
         this.puerto = puerto;
     }
     

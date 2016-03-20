@@ -10,31 +10,26 @@ package torrentserver;
  * @author Fabi
  */
 public class Archivo {
-    private String nombre;
     private String hash;
-    private float peso;
+    private int peso;
     
     Archivo(){
     }
     
-    Archivo(String nombre, float peso){
-        this.nombre = nombre;
+    Archivo(String hash){
+        this.hash = hash;
+    }
+    
+    Archivo(String hash, int peso){
+        this.hash = hash;
         this.peso = peso;
     }
     
-    public String getNombre() {
-        return nombre;
-    }
-    
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
     public String getHash() {
         return hash;
     }
 
-    public float getPeso() {
+    public int getPeso() {
         return peso;
     }
 }
