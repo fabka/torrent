@@ -1,6 +1,7 @@
 package torrentserver;
 import java.net.*;
 import java.io.*;
+import java.util.List;
 public class TCPServer {
     public static void main (String args[]) {
             try{
@@ -14,36 +15,43 @@ public class TCPServer {
     }
 }
 class Connection extends Thread {
-    DataInputStream in;
-    DataOutputStream out;
+    ObjectInputStream in;
+    ObjectOutputStream out;
     Socket clientSocket;
     Directorio directorio = new Directorio();
 
     public Connection (Socket aClientSocket) {
             try {
                     clientSocket = aClientSocket;
-                    in = new DataInputStream( clientSocket.getInputStream());
-                    out =new DataOutputStream( clientSocket.getOutputStream());
+                    in = new ObjectInputStream( clientSocket.getInputStream());
+                    out =new ObjectOutputStream( clientSocket.getOutputStream());
                     this.start();
             } catch(IOException e) {System.out.println("Connection:"+e.getMessage());}
     }
 
     @Override
     public void run(){
-        String comando, hash, ip, puerto, peso;
+        String nombre, comando, hash, ip, puerto, peso;
         try {			                 // an echo server
                 comando = in.readUTF();
-                hash = in.readUTF();
                 if( comando!=null && comando.equals("obtener")){
-                    directorio.clientesDisponibles(hash);
+                    nombre = in.readUTF();
+                    if( nombre.equals("todos")){
+                        List<Archivo> lista = directorio.obtenerArchivosDisponibles();
+                        out.writeObject(lista);
+                    }else{
+                        List<Zocalo> zocalos;
+                        zocalos = directorio.clientesDisponibles(nombre);
+                        out.writeObject(zocalos);
+                    }
                 }else if( comando!=null && comando.equals("agregar") ){
+                    hash = in.readUTF();
                     ip = in.readUTF();
                     puerto = in.readUTF();
+                    peso = in.readUTF();
                     directorio.anadirZocalo(hash, ip, puerto);
                 }
                 
-                //read a line of data from the stream
-                out.writeUTF(comando);
         }catch (EOFException e){System.out.println("EOF:"+e.getMessage());
         } catch(IOException e) {System.out.println("readline:"+e.getMessage());
         } finally{ try {clientSocket.close();}catch (IOException e){/*close failed*/}}

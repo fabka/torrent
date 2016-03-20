@@ -10,6 +10,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -44,9 +45,15 @@ public final class Directorio{
         }
     }
     
-    public List<Zocalo> clientesDisponibles(String hash){
-        Torrent t = directorio.get( new Archivo(hash) );
-        return t.getZocalos();
+    public List<Zocalo> clientesDisponibles(String nombre){
+        Set<Archivo> archivos = directorio.keySet();
+        for(Archivo a: archivos){
+            if(a.getNombre().equals(nombre)){
+                Torrent t =  directorio.get(a);
+                return t.getZocalos();
+            }
+        }
+        return null;
     }
     
     public void anadirArchivo ( Archivo archivo ){
@@ -54,6 +61,11 @@ public final class Directorio{
         colaDirectorios.guardar();
     }
     
+    public List<Archivo> obtenerArchivosDisponibles(){
+        List archivos = new ArrayList<>();
+        archivos.addAll(directorio.keySet());
+        return archivos;
+    }    
     
     public void anadirZocalo ( String hash, String ip, String puerto ){
         Archivo archivo = new Archivo(hash);
@@ -67,8 +79,7 @@ public final class Directorio{
     
     public Torrent obtenerTorrent(Archivo archivo){
         return directorio.get(archivo);
-    }
-    
+    }    
     private class AnadirAchivo implements Runnable{
         Archivo archivo;
 

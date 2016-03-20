@@ -10,6 +10,7 @@ package torrentserver;
  * @author Fabi
  */
 public class Archivo {
+    private String nombre;
     private String hash;
     private int peso;
     
@@ -31,5 +32,13 @@ public class Archivo {
 
     public int getPeso() {
         return peso;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
     }
 }
