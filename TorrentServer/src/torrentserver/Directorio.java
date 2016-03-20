@@ -10,6 +10,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -42,9 +44,21 @@ public final class Directorio{
         }
     }
     
+    public List<Zocalo> clientesDisponibles(String hash){
+        Torrent t = directorio.get( new Archivo(hash) );
+        return t.getZocalos();
+    }
+    
     public void anadirArchivo ( Archivo archivo ){
         AnadirAchivo anadirAchivo = new AnadirAchivo(archivo);
         colaDirectorios.guardar();
+    }
+    
+    
+    public void anadirZocalo ( String hash, String ip, String puerto ){
+        Archivo archivo = new Archivo(hash);
+        Zocalo zocalo = new Zocalo(ip, puerto);
+        AnadirZocalo anadirZocalo = new AnadirZocalo(archivo, zocalo);
     }
     
     public void anadirZocalo ( Zocalo z, Archivo a ){
@@ -80,6 +94,9 @@ public final class Directorio{
         
         @Override
         public void run() {
+            Set<Archivo> archivosDisponibles = directorio.keySet();
+            if(!archivosDisponibles.contains(this.archivo))
+                anadirArchivo(archivo);
             Torrent torrent = directorio.get(archivo);
             torrent.anadirZocalo(zocalo);
         }
@@ -112,5 +129,4 @@ public final class Directorio{
             }
         }
     }
-
 }

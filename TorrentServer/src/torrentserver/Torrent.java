@@ -33,7 +33,11 @@ public class Torrent {
         this.zocalos = zocalos;
     }
     
-    public void anadirZocalo( String ip, int puerto){
+    public List<Zocalo> getZocalos() {
+        return this.zocalos;
+    }
+    
+    public void anadirZocalo( String ip, String puerto){
         Zocalo z = new Zocalo(ip, puerto);
         this.zocalos.add(z);
     }

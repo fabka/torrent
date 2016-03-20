@@ -5,12 +5,6 @@
  */
 package torrentserver;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.util.concurrent.ConcurrentHashMap;
-
 /**
  *
  * @author Fabi
@@ -24,11 +18,11 @@ public class TorrentServer implements Runnable{
         
     /**
      * @param args the command line arguments
-     */
+     
     public static void main(String[] args) {
         TorrentServer torrentServer = new TorrentServer();
     }
-          
+         */
 
     @Override
     public void run() {
