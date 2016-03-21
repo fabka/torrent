@@ -5,16 +5,9 @@
  */
 package torrentserver;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentLinkedQueue;
+import java.io.*;
+import java.util.*;
+import java.util.concurrent.*;
 
 /**
  *
@@ -22,20 +15,34 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  */
 public final class Directorio{
     
-    private final ConcurrentHashMap<Archivo, Torrent> directorio;
+    private ConcurrentHashMap<Archivo, Torrent> directorio;
+    File archivo;
     private ColaDirectorios colaDirectorios;
 
     public Directorio() {
-        this.colaDirectorios = new ColaDirectorios();
+        try {
+            this.colaDirectorios = new ColaDirectorios();
+            archivo = new File("directorio.fabi");
+            if(!archivo.exists()) {
+                archivo.createNewFile();
+                FileOutputStream fos = new FileOutputStream(archivo);
+                ObjectOutputStream oos = new ObjectOutputStream(fos);
+                directorio = null;
+                oos.writeObject(directorio);
+            }
+        } catch (FileNotFoundException fnfex) {
+        } catch (IOException ioex){
+        }
         this.directorio = load();
     }
     
     private ConcurrentHashMap<Archivo, Torrent> load(){
-        ConcurrentHashMap<Archivo, Torrent> directorio;
         try{
-            FileInputStream fin = new FileInputStream("c:\\address.ser");
+            FileInputStream fin = new FileInputStream(archivo);
             ObjectInputStream ois = new ObjectInputStream(fin);
             directorio = (ConcurrentHashMap<Archivo,Torrent>) ois.readObject();
+            if( directorio == null )
+                directorio = new ConcurrentHashMap<>();
             ois.close();
             System.out.println("Directorio cargado correctamente");
             return directorio;
@@ -57,15 +64,22 @@ public final class Directorio{
     }
     
     public void anadirArchivo ( Archivo archivo ){
-        AnadirAchivo anadirAchivo = new AnadirAchivo(archivo);
+        new AnadirAchivo(archivo);
         colaDirectorios.guardar();
     }
     
     public List<Archivo> obtenerArchivosDisponibles(){
-        List archivos = new ArrayList<>();
+        List<Archivo> archivos = new ArrayList<>();
         archivos.addAll(directorio.keySet());
         return archivos;
-    }    
+    }
+    
+    public void imprimirArchivosDisponibles(){
+        List<Archivo> archivos = obtenerArchivosDisponibles();
+        for( Archivo a: archivos ){
+            
+        }
+    }
     
     public void anadirZocalo ( String hash, String ip, String puerto ){
         Archivo archivo = new Archivo(hash);
@@ -79,7 +93,10 @@ public final class Directorio{
     
     public Torrent obtenerTorrent(Archivo archivo){
         return directorio.get(archivo);
-    }    
+    }
+    
+    
+    
     private class AnadirAchivo implements Runnable{
         Archivo archivo;
 
