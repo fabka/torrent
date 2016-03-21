@@ -63,6 +63,15 @@ public final class Directorio{
         return null;
     }
     
+    public Archivo obtenerArchivo( String nombre ){
+        List<Archivo> archivos = obtenerArchivosDisponibles();
+        for( Archivo a: archivos ){
+            if( a.getNombre().equals(nombre) )
+                return a;
+        }
+        return null;
+    }
+    
     public void anadirArchivo ( Archivo archivo ){
         new AnadirAchivo(archivo);
         colaDirectorios.guardar();
@@ -70,24 +79,48 @@ public final class Directorio{
     
     public List<Archivo> obtenerArchivosDisponibles(){
         List<Archivo> archivos = new ArrayList<>();
-        archivos.addAll(directorio.keySet());
+        archivos.addAll(this.directorio.keySet());
         return archivos;
     }
     
     public void imprimirArchivosDisponibles(){
         List<Archivo> archivos = obtenerArchivosDisponibles();
-        for( Archivo a: archivos ){
-            
+        if (archivos == null){
+            System.out.println("Directorio nulo");
+        }else if( archivos.isEmpty()){
+            System.out.println("Directorio vacío");
+        }else{
+            for( Archivo a: archivos ){
+                System.out.println(a.toString());
+            }
         }
     }
     
-    public void anadirZocalo ( String hash, String ip, String puerto ){
-        Archivo archivo = new Archivo(hash);
-        Zocalo zocalo = new Zocalo(ip, puerto);
-        AnadirZocalo anadirZocalo = new AnadirZocalo(archivo, zocalo);
+    public void imprimirArchivosDisponibles(List<Archivo> archivos){
+        if (archivos == null){
+            System.out.println("Directorio nulo");
+        }else if( archivos.isEmpty() ){
+            System.out.println("Directorio vacío");
+        }else{
+            for( Archivo a: archivos ){
+                System.out.println(a.toString());
+            }
+        }
     }
     
-    public void anadirZocalo ( Zocalo z, Archivo a ){
+    public void anadirZocalo ( String nombre, String hash, String ip, String puerto, String peso ){
+        Archivo a = obtenerArchivo(nombre);
+        Zocalo z = new Zocalo(ip, puerto);
+        if( a!=null )
+            anadirZocalo(z, a);
+        else{
+            double p = Double.parseDouble(peso);
+            Archivo temp = new Archivo(nombre, hash, p);
+            new AnadirAchivo(temp);
+        }
+    }
+    
+    public void anadirZocalo ( Zocalo z, Archivo a ){        
         AnadirZocalo anadirZocalo = new AnadirZocalo(a, z);
     }
     
@@ -95,12 +128,10 @@ public final class Directorio{
         return directorio.get(archivo);
     }
     
-    
-    
     private class AnadirAchivo implements Runnable{
         Archivo archivo;
 
-        public AnadirAchivo( Archivo archivo) {
+        public AnadirAchivo( Archivo archivo ) {
             this.archivo =  archivo;
         }
         

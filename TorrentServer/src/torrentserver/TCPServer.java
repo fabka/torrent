@@ -39,21 +39,26 @@ class Connection extends Thread {
         
     @Override
     public void run(){
-        String nombre, comando, hash, ip, puerto, peso;
+        String nombre, comando;
         try {
             comando = in.readUTF();
-            if( comando!=null && comando.equals("obtener")){
-                nombre = in.readUTF();
-                if( nombre.equals("todos")){
-                    //out.writeObject(manejadorDirectorio.obtenerTodosArchivos());
+            if( comando == null )
+                comando = "";
+            switch( comando ){
+                case "obtener todos":
                     System.out.println("Obtener todos los archivos");
-                }else{
-                    //out.writeObject(manejadorDirectorio.obtenerDisponibles(nombre));
+                    manejadorDirectorio.imprimirTodosArchivos(manejadorDirectorio.obtenerTodosArchivos());
+                    //out.writeObject(manejadorDirectorio.obtenerTodosArchivos());
+                    break;
+                case "obtener":
+                    nombre = in.readUTF();
                     System.out.println("Obtener c/s disponibles de "+nombre);
-                }
-            }else if( comando!=null && comando.equals("agregar") ){
-                //manejadorDirectorio.agregarArchivo(in);
-                System.out.println("Agregar archivo");
+                    //out.writeObject(manejadorDirectorio.obtenerDisponibles(nombre));
+                    break;
+                case "agregar archivo":
+                    System.out.println("Agregar archivo");
+                    //manejadorDirectorio.agregarArchivo(in);
+                    break;
             }
         }catch (EOFException e){System.out.println("EOF:"+e.getMessage());
         } catch(IOException e) {System.out.println("readline:"+e.getMessage());
@@ -79,11 +84,16 @@ class Connection extends Thread {
         }
         
         public void agregarArchivo( ObjectInputStream in ) throws IOException{
+            String nombre = in.readUTF();
             String hash = in.readUTF();
             String ip = in.readUTF();
             String puerto = in.readUTF();
             String peso = in.readUTF();
-            directorio.anadirZocalo(hash, ip, puerto);
+            directorio.anadirZocalo(nombre, hash, ip, puerto, peso);
+        }
+        
+        public void imprimirTodosArchivos( List<Archivo> archivos){
+            directorio.imprimirArchivosDisponibles(archivos);
         }
                 
     }

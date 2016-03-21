@@ -12,7 +12,7 @@ package torrentserver;
 public class Archivo {
     private String nombre;
     private String hash;
-    private int peso;
+    private double peso;
     
     Archivo(){
     }
@@ -21,7 +21,13 @@ public class Archivo {
         this.hash = hash;
     }
     
-    Archivo(String hash, int peso){
+    Archivo(String hash, double peso){
+        this.hash = hash;
+        this.peso = peso;
+    }
+    
+    Archivo(String nombre, String hash, double peso){
+        this.nombre = nombre;
         this.hash = hash;
         this.peso = peso;
     }
@@ -30,7 +36,7 @@ public class Archivo {
         return hash;
     }
 
-    public int getPeso() {
+    public double getPeso() {
         return peso;
     }
 
@@ -41,4 +47,11 @@ public class Archivo {
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
+
+    @Override
+    public String toString() {
+        return nombre;
+    }
+    
+    
 }
