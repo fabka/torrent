@@ -29,6 +29,7 @@ public final class Directorio{
                 ObjectOutputStream oos = new ObjectOutputStream(fos);
                 directorio = null;
                 oos.writeObject(directorio);
+                oos.close();
             }
         } catch (FileNotFoundException fnfex) {
         } catch (IOException ioex){
@@ -40,14 +41,15 @@ public final class Directorio{
         try{
             FileInputStream fin = new FileInputStream(archivo);
             ObjectInputStream ois = new ObjectInputStream(fin);
-            directorio = (ConcurrentHashMap<Archivo,Torrent>) ois.readObject();
+            directorio = (ConcurrentHashMap<Archivo,Torrent>)ois.readObject();
             if( directorio == null )
                 directorio = new ConcurrentHashMap<>();
             ois.close();
             System.out.println("Directorio cargado correctamente");
             return directorio;
-        }catch(IOException | ClassNotFoundException ex){
+        }catch(Exception ex){
             System.out.println("Error al cargar el directorio");
+            ex.printStackTrace();
             return null;
         }
     }
@@ -80,6 +82,7 @@ public final class Directorio{
     public List<Archivo> obtenerArchivosDisponibles(){
         List<Archivo> archivos = new ArrayList<>();
         archivos.addAll(this.directorio.keySet());
+        System.out.println("Archivos disponibles = "+archivos.size());
         return archivos;
     }
     
@@ -94,8 +97,7 @@ public final class Directorio{
                 System.out.println(a.toString());
             }
         }
-    }
-    
+    }    
     public void imprimirArchivosDisponibles(List<Archivo> archivos){
         if (archivos == null){
             System.out.println("Directorio nulo");
@@ -108,20 +110,17 @@ public final class Directorio{
         }
     }
     
-    public void anadirZocalo ( String nombre, String hash, String ip, String puerto, String peso ){
-        Archivo a = obtenerArchivo(nombre);
+    public void anadirZocalo ( String nombre, String hash, String ip, String puerto, String peso ){;
         Zocalo z = new Zocalo(ip, puerto);
-        if( a!=null )
-            anadirZocalo(z, a);
-        else{
-            double p = Double.parseDouble(peso);
-            Archivo temp = new Archivo(nombre, hash, p);
-            new AnadirAchivo(temp);
-        }
+        double p = Double.parseDouble(peso);
+        Archivo a = new Archivo(nombre, hash, p);
+        new AnadirZocalo(a, z);
+        System.out.println("Archivo se anadio satisfactoriamente");
+        
     }
     
     public void anadirZocalo ( Zocalo z, Archivo a ){        
-        AnadirZocalo anadirZocalo = new AnadirZocalo(a, z);
+        new AnadirZocalo(a, z);
     }
     
     public Torrent obtenerTorrent(Archivo archivo){
@@ -133,6 +132,7 @@ public final class Directorio{
 
         public AnadirAchivo( Archivo archivo ) {
             this.archivo =  archivo;
+            this.run();
         }
         
         @Override
@@ -149,15 +149,19 @@ public final class Directorio{
         public AnadirZocalo( Archivo archivo, Zocalo zocalo) {
             this.archivo =  archivo;
             this.zocalo = zocalo;
+            this.run();
         }
         
         @Override
         public void run() {
             Set<Archivo> archivosDisponibles = directorio.keySet();
             if(!archivosDisponibles.contains(this.archivo))
-                anadirArchivo(archivo);
+                new AnadirAchivo(archivo);
             Torrent torrent = directorio.get(archivo);
-            torrent.anadirZocalo(zocalo);
+            if(torrent != null)
+                torrent.anadirZocalo(zocalo);
+            imprimirArchivosDisponibles();
+            colaDirectorios.guardar();
         }
     }
     
@@ -170,6 +174,7 @@ public final class Directorio{
         
         public void guardar(){
             this.colaDirectorios.add(directorio);
+            this.run();
         }
 
         @Override
@@ -183,6 +188,9 @@ public final class Directorio{
                         oos.writeObject(d);
                         oos.close();
                     }catch(Exception ex){
+                        System.out.println("Error al guardar el archivo");
+                        ex.printStackTrace();
+                        return;
                     }
                 }
             }

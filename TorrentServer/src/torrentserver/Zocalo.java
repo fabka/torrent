@@ -5,11 +5,13 @@
  */
 package torrentserver;
 
+import java.io.Serializable;
+
 /**
  *
  * @author Fabi
  */
-public class Zocalo {
+public class Zocalo implements Serializable{
     private String ip;
     private String puerto;
 
@@ -33,6 +35,4 @@ public class Zocalo {
     public void setPuerto(String puerto) {
         this.puerto = puerto;
     }
-    
-    
 }

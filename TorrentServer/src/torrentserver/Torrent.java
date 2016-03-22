@@ -5,6 +5,7 @@
  */
 package torrentserver;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,7 +13,7 @@ import java.util.List;
  *
  * @author Fabi
  */
-public class Torrent {
+public class Torrent implements Serializable{
     Archivo archivo;
     List<Zocalo> zocalos;
 

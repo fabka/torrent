@@ -5,11 +5,13 @@
  */
 package torrentserver;
 
+import java.io.Serializable;
+
 /**
  *
  * @author Fabi
  */
-public class Archivo {
+public class Archivo implements Serializable{
     private String nombre;
     private String hash;
     private double peso;

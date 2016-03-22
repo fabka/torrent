@@ -25,7 +25,6 @@ class Connection extends Thread {
     Socket clientSocket;
     ManejadorDirectorio manejadorDirectorio;
     
-
     public Connection (Socket clientSocket) {
         try {
             manejadorDirectorio = new ManejadorDirectorio();
@@ -45,19 +44,23 @@ class Connection extends Thread {
             if( comando == null )
                 comando = "";
             switch( comando ){
-                case "obtener todos":
-                    System.out.println("Obtener todos los archivos");
-                    manejadorDirectorio.imprimirTodosArchivos(manejadorDirectorio.obtenerTodosArchivos());
-                    //out.writeObject(manejadorDirectorio.obtenerTodosArchivos());
-                    break;
                 case "obtener":
                     nombre = in.readUTF();
-                    System.out.println("Obtener c/s disponibles de "+nombre);
-                    //out.writeObject(manejadorDirectorio.obtenerDisponibles(nombre));
+                    if (nombre.equals("todos")){
+                        System.out.println("Obtener todos los archivos");
+                        manejadorDirectorio.imprimirTodosArchivos(manejadorDirectorio.obtenerTodosArchivos());
+                        //out.writeObject(manejadorDirectorio.obtenerTodosArchivos());
+                    }else{
+                        System.out.println("Obtener c/s disponibles de "+nombre);
+                        //out.writeObject(manejadorDirectorio.obtenerDisponibles(nombre));
+                    }
                     break;
-                case "agregar archivo":
+                case "agregar":
                     System.out.println("Agregar archivo");
-                    //manejadorDirectorio.agregarArchivo(in);
+                    manejadorDirectorio.agregarArchivo(in);
+                    break;
+                default:
+                    System.out.println("Acción no registrada");
                     break;
             }
         }catch (EOFException e){System.out.println("EOF:"+e.getMessage());
@@ -94,7 +97,6 @@ class Connection extends Thread {
         
         public void imprimirTodosArchivos( List<Archivo> archivos){
             directorio.imprimirArchivosDisponibles(archivos);
-        }
-                
+        }                 
     }
 }
