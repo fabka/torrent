@@ -35,4 +35,6 @@ public class Zocalo implements Serializable{
     public void setPuerto(String puerto) {
         this.puerto = puerto;
     }
+    
+    
 }

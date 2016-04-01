@@ -6,14 +6,15 @@
 package torrentserver;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  *
  * @author Fabi
  */
 public class Archivo implements Serializable{
-    private String nombre;
     private String hash;
+    private String nombre;
     private double peso;
     
     Archivo(){
@@ -21,11 +22,6 @@ public class Archivo implements Serializable{
     
     Archivo(String hash){
         this.hash = hash;
-    }
-    
-    Archivo(String hash, double peso){
-        this.hash = hash;
-        this.peso = peso;
     }
     
     Archivo(String nombre, String hash, double peso){
@@ -45,15 +41,23 @@ public class Archivo implements Serializable{
     public String getNombre() {
         return nombre;
     }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
+    
+    @Override
+    public boolean equals(Object obj) {
+        if( obj instanceof Archivo ){
+            Archivo a = (Archivo)obj;
+            return this.hash.equals(a.getHash()) && a.getPeso() == peso 
+                    && this.nombre.equals(a.getNombre());
+        }
+        return false;
     }
 
     @Override
-    public String toString() {
-        return nombre;
+    public int hashCode() {
+        int hash = 3;
+        hash = 41 * hash + Objects.hashCode(this.hash);
+        hash = 41 * hash + Objects.hashCode(this.nombre);
+        hash = 41 * hash + (int) (Double.doubleToLongBits(this.peso) ^ (Double.doubleToLongBits(this.peso) >>> 32));
+        return hash;
     }
-    
-    
 }
