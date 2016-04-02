@@ -13,7 +13,7 @@ import java.util.Scanner;
  * @author sala-a
  */
 public class MainTest {
-    public static void main (String args[]) {
+    /*public static void main (String args[]) {
         Directorio directorio = new Directorio();
         Scanner keyboard = new Scanner(System.in);
         String opcion="", nombre, hash, ip, puerto, peso;
@@ -57,5 +57,5 @@ public class MainTest {
             }
         }
         directorio.close();
-    }
+    }*/
 }

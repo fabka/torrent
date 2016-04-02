@@ -115,12 +115,22 @@ public final class Directorio{
         }
     }
     
+    public void save(){
+        try{
+            FileOutputStream fout = new FileOutputStream("server.dir");
+            ObjectOutputStream oos = new ObjectOutputStream(fout); 
+            oos.writeObject(directorio);
+            oos.close();
+        } catch (Exception e) {
+        }
+    }
+    
     public void close(){
         try {
             FileOutputStream fout = new FileOutputStream("server.dir");
-        ObjectOutputStream oos = new ObjectOutputStream(fout); 
-        oos.writeObject(directorio);
-        oos.close();
+            ObjectOutputStream oos = new ObjectOutputStream(fout); 
+            oos.writeObject(directorio);
+            oos.close();
         } catch (Exception e) {
         }
     }

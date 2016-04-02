@@ -5,10 +5,9 @@ import java.util.ArrayList;
 public class TCPServer {
     
     public static void main (String args[]) {
-        
         Directorio directorio = new Directorio();
-        
         try{
+            System.out.println("Iniciando servidor...");
             int serverPort = 7896; // the server port
             ServerSocket listenSocket = new ServerSocket(serverPort);
             while(true) {
@@ -31,43 +30,52 @@ class Connection extends Thread {
                 this.directorio = directorio;
                 clientSocket = aClientSocket;
                 in = new DataInputStream( clientSocket.getInputStream());
-                out =new DataOutputStream( clientSocket.getOutputStream());
+                out = new DataOutputStream( clientSocket.getOutputStream());
                 this.start();
+                System.out.println("Conexion establecida con "+clientSocket.getInetAddress().toString());
             } catch(IOException e) {System.out.println("Connection:"+e.getMessage());}
     }
 
     @Override
     public void run(){
         String comando, nombre, hash, ip, puerto, peso_string;
-        try {			            
-                comando = in.readUTF();
+        try {			       
                 
+            do{
+                System.out.println("Esperando respuesta...");
+                comando = in.readUTF();
+                System.out.println("Recibido: " + comando);
                 switch(comando){
-                case "agregar":
-                    nombre = in.readUTF();
-                    hash = in.readUTF();
-                    peso_string = in.readUTF();
-                    ip = in.readUTF();
-                    puerto = in.readUTF();
-                    directorio.anadirZocalo(nombre, hash, Double.parseDouble(peso_string), ip, puerto);
+                    case "agregar":
+                        nombre = in.readUTF();
+                        hash = in.readUTF();
+                        peso_string = in.readUTF();
+                        ip = in.readUTF();
+                        puerto = in.readUTF();
+                        directorio.anadirZocalo(nombre, hash, Double.parseDouble(peso_string), ip, puerto);
+                        directorio.save();
+                        System.out.println("Se añadio el archivo "+nombre+" correctamente");
+                        break;
+                    case "obtener todos":
+                        ArrayList<Archivo> archivos = directorio.obtenerArchivos();
+                        System.out.println("Enviando...");
+                        out.writeUTF(archivos.size()+"");
+                        for(Archivo a: archivos){
+                            out.writeUTF(a.getNombre());
+                        }
+                        break;
+                    case "obtener lista":
+                        nombre = in.readUTF();
+                        Archivo a = directorio.obtenerArchivo(nombre);
+                        ArrayList<Zocalo> zocalos = directorio.obtenerListaZocalos(a.getHash());
+                        out.writeUTF(zocalos.size()+"");
+                        for(Zocalo z: zocalos){
+                            out.writeUTF(z.getIp());
+                            out.writeUTF(z.getPuerto());
+                        }
                     break;
-                case "obtener todos":
-                    ArrayList<Archivo> archivos = directorio.obtenerArchivos();
-                    out.writeUTF(archivos.size()+"");
-                    for(Archivo a: archivos)
-                        out.writeUTF(a.getNombre());
-                    break;
-                case "obtener lista":
-                    nombre = in.readUTF();
-                    Archivo a = directorio.obtenerArchivo(nombre);
-                    ArrayList<Zocalo> zocalos = directorio.obtenerListaZocalos(a.getHash());
-                    out.writeUTF(zocalos.size()+"");
-                    for(Zocalo z: zocalos){
-                        out.writeUTF(z.getIp());
-                        out.writeUTF(z.getPuerto());
-                    }
-                break;
-            }
+                }
+            }while(!comando.equals("salir"));
         }catch (EOFException e){System.out.println("EOF:"+e.getMessage());
         } catch(IOException e) {System.out.println("readline:"+e.getMessage());
         } finally{ try {clientSocket.close();}catch (IOException e){/*close failed*/}}
