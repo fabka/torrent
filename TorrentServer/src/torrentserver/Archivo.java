@@ -20,6 +20,10 @@ public class Archivo implements Serializable{
     Archivo(){
     }
     
+    int numeroPartes(){
+        return ((int)peso)+1;
+    }
+    
     Archivo(String hash){
         this.hash = hash;
     }
