@@ -67,6 +67,8 @@ class Connection extends Thread {
                     case "obtener lista":
                         nombre = in.readUTF();
                         Archivo a = directorio.obtenerArchivo(nombre);
+                        out.writeUTF(a.numeroPartes() + "");
+                        out.writeUTF(a.getHash());
                         ArrayList<Zocalo> zocalos = directorio.obtenerListaZocalos(a.getHash());
                         out.writeUTF(zocalos.size()+"");
                         for(Zocalo z: zocalos){
