@@ -13,3 +13,5 @@ hs_err_pid*
 /TorrentServer/build/
 /Hash/nbproject/private/
 /Hash/build/
+/ClientTest/build/
+/ClientTest/nbproject/private/
