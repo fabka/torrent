@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package torrentclient;
+package cliente;
 
 import java.io.*;
 import java.net.*;
@@ -59,17 +59,17 @@ public class Test {
           }
           case 2 :
           {
-               ArrayList<Archivo> archivos = new ArrayList<>();
+               ArrayList<String> archivos = new ArrayList<>();
                archivos = client.pedirTodos();
-               for(Archivo a : archivos)
+               for(String a : archivos)
                {
-                  System.out.println(a.getNombre());
+                  System.out.println(a);
                }
                System.out.println("Digite el nombre de la pelicula");
                nombre = br.readLine();
-              for(Archivo a : archivos)
+              for(String a : archivos)
                {
-                   if (nombre == a.getNombre())
+                   if(nombre.compareTo(a)==0)  //arreglar a las cosas de java
                        client.pedirDirectorio(nombre);
                }
           }

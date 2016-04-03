@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package torrentclient;
+package cliente;
 
 import java.net.InetAddress;
 
@@ -13,7 +13,7 @@ import java.net.InetAddress;
  */
 public class Zocalo {
     private InetAddress ip;
-    private int puerto;
+    private String puerto;
 
     public InetAddress getIp() {
         return ip;
@@ -23,11 +23,11 @@ public class Zocalo {
         this.ip = ip;
     }
 
-    public int getPuerto() {
+    public String getPuerto() {
         return puerto;
     }
 
-    public void setPuerto(int puerto) {
+    public void setPuerto(String puerto) {
         this.puerto = puerto;
     }
     

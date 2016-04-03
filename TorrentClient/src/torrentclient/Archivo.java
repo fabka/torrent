@@ -3,13 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package torrentclient;
+package cliente;
+
+import java.io.Serializable;
 
 /**
  *
  * @author redes
  */
-public class Archivo {
+public class Archivo implements Serializable {
     private String nombre;
     private String hash;
     private float peso;
