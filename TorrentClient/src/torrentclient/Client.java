@@ -6,6 +6,7 @@
 package cliente;
 
 //import Manejador.TCPClient;
+import cliente.Server.Connection;
 import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
@@ -32,6 +33,7 @@ public void pedirDirectorio (String archivo)
  {
     ArrayList<Zocalo> servidores = new ArrayList<>();
     Zocalo z= new Zocalo();
+    String hash = null;
     DataInputStream in ;
     DataOutputStream out ;
     int partes=0,total;
@@ -44,22 +46,24 @@ public void pedirDirectorio (String archivo)
                     out.writeUTF("obtener lista");   
                     out.writeUTF(archivo);      	
                     total = Integer.parseInt(in.readUTF()); 
-                             for(int i=0; i<total; i++)
+                     hash=in.readUTF();
+                     for(int i=0; i<total; i++)
                     {
                         //se lee el nombre de cada archivo ip y puerto
                         z.setIp(InetAddress.getByName(in.readUTF()));
                         z.setPuerto(in.readUTF());
+                       
                         //se agrega a la lista de servidores
                         servidores.add(z);
                     }
                     
                     partes = Integer.parseInt(in.readUTF()) ;	
     } catch (IOException ex) {
-      Logger.getLogger(ClientThread.class.getName()).log(Level.SEVERE, null, ex);
+      Logger.getLogger(Connection.class.getName()).log(Level.SEVERE, null, ex);
     }
     //Se llaama a la funcion que buscara los servidores donde debe descargar
     
-    descargar(servidores, 1, partes, archivo);
+    descargar(servidores, 1, partes, archivo, hash);
  }
 //-------------------------------------------------------------------------------------------------------
 //conectarse con el directorio 
@@ -86,7 +90,7 @@ public  ArrayList<String>  pedirTodos ()
          
      	    // read a line of data from the stream	
     } catch (IOException ex) {
-      Logger.getLogger(ClientThread.class.getName()).log(Level.SEVERE, null, ex);
+      Logger.getLogger(Connection.class.getName()).log(Level.SEVERE, null, ex);
      
     }
     return archivos;
@@ -106,7 +110,7 @@ public boolean verificarConexion(InetAddress ip)
 	
 }
  //------------------------------------------------------------------------------------------------------
-public void descargar (ArrayList<Zocalo> servidores, int tam, int partes, String nombre)//InetAddress ip, int port, int parte )
+public void descargar (ArrayList<Zocalo> servidores, int tam, int partes, String nombre, String hash)//InetAddress ip, int port, int parte )
 {
                 Socket s = null;
                 int numbytes, actual;
@@ -123,7 +127,7 @@ public void descargar (ArrayList<Zocalo> servidores, int tam, int partes, String
                 //        int partes =1;
                         ByteArrayOutputStream baos = new ByteArrayOutputStream();
                   //      public void MergeFileExample(String nombre, int partes) {
-                        File ofile = new File("index2.jpg");
+                        File ofile = new File(nombre);
                         
                         FileInputStream fis;
                         byte[] fileBytes;
@@ -140,7 +144,9 @@ public void descargar (ArrayList<Zocalo> servidores, int tam, int partes, String
                             int servidor = rnd.nextInt(servidores.size());
                             s = new Socket(servidores.get(servidor).getPuerto(),Integer.parseInt(servidores.get(servidor).getIp().getHostAddress())); 
                             DataOutputStream output = new DataOutputStream(s.getOutputStream());   
+                            
                             output.writeUTF(String.valueOf(i));
+                              output.writeUTF(hash);
                              bytes = new byte [tam*2];                            
                             fos = new FileOutputStream(ofile, true);
                             for (File file : list) {

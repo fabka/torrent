@@ -5,7 +5,14 @@
  */
 package cliente;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.Serializable;
+import java.nio.file.Path;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -19,9 +26,10 @@ public class Archivo implements Serializable {
     Archivo(){
     }
     
-    Archivo(String nombre, float peso){
+    Archivo(String nombre, float peso, String path){
         this.nombre = nombre;
         this.peso = peso;
+        this.hash = md5(path);
     }
     
     public String getNombre() {
@@ -35,8 +43,27 @@ public class Archivo implements Serializable {
     public String getHash() {
         return hash;
     }
+    
+    public String setHash() {
+        return hash;
+    }
 
     public float getPeso() {
         return peso;
+    }
+    
+    public String md5 (String ruta){
+        FileInputStream fis;
+        try {
+            fis = new FileInputStream(new File(ruta));
+            String md5 = org.apache.commons.codec.digest.DigestUtils.md5Hex(fis);
+            fis.close();
+            return md5;
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(Archivo.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(Archivo.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
     }
 }

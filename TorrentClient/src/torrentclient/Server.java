@@ -8,24 +8,25 @@
 
 package cliente;
 
-import cliente.ClientThread;
+
 import java.net.*;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 public class Server {
 
    private static final int port_start = 49152;
-   
-   private static final int port_end = 65534;
+   List<Archivo> archivos;
    private String host = "localhost";
    private int serverPort = 0 ;
  
     public Server() {
+      archivos = new ArrayList<>();
     }
 
 
@@ -34,11 +35,7 @@ public class Server {
   {
     int port = port_start;
     ServerSocket server = null; 
-        for (; port <= Server.port_end; port++) 
-        {
-              server = new ServerSocket(port);
-              this.serverPort = port;
-        }
+  
     while(true){
       Connection client;
         //accept espera client connection   
@@ -51,21 +48,21 @@ public class Server {
   } 
     
 //------------------------------------------------------------------------------  
-   public void agregarArchivo(float size, String name, String ip, String port)
+   public void agregarArchivo(float size, String name, String ip, String port, String path)
    {
+       Archivo a = new Archivo(name, size, path);
+       archivos.add(a);
        try {
            DataOutputStream out ;
            Socket s = null;
            s = new Socket(host,this.serverPort);
            out =new DataOutputStream( s.getOutputStream());
            out.writeUTF("agregar");
-           //Nombre de la pelicula
            out.writeUTF(name);
-           //Agregar el hash
+           out.writeUTF(a.getHash());
            out.writeUTF(String.valueOf(size));
            out.writeUTF(ip);
            out.writeUTF(port);
-           
            
            out.close();
        } catch (IOException ex) {
@@ -87,31 +84,38 @@ public class Server {
         int parte =0;
         
 	public Connection (Socket aClientSocket) {
-		try 
-           {
-			clientSocket = aClientSocket;
-                       // parte = num_parte;
-			//in = new DataInputStream( clientSocket.getInputStream());
-			out = clientSocket.getOutputStream();
+            try{
+                clientSocket = aClientSocket;
+               // parte = num_parte;
+                //in = new DataInputStream( clientSocket.getInputStream());
+                out = clientSocket.getOutputStream();
 
-			this.start();
-		} catch(IOException e) {System.out.println("Connection:"+e.getMessage());}
+                this.start();
+            } catch(IOException e) {System.out.println("Connection:"+e.getMessage());}
 	}
+        
 	public void run(){
+            String hash, nombre = null;
 		try {	
                     DataInputStream in = new DataInputStream(clientSocket.getInputStream());
                     parte = Integer.parseInt(in.readUTF());
-		int size = 1024;	
+                    hash = in.readUTF();
+                    for( Archivo a: archivos ){
+                        if( a.getHash().equals(hash) ){
+                            nombre = a.getNombre();
+                        }
+                    }
+		int size = 1024;
+                
                 //enviar el archivo
-		File testfile = new File("index.jpg");              // an echo server
+		File testfile = new File(nombre);             
 		 byte[] bytes ;
-                Path path = Paths.get("index.jpg");
+                Path path = Paths.get(nombre);
                 bytes = Files.readAllBytes(path);
                 System.out.println("Size : "+ bytes.length);
                 fis = new FileInputStream(testfile);
                 bis = new BufferedInputStream(fis);
                 bis.read(bytes,0,bytes.length);
-
                 //-----------------------------------------------------------------------------
                  int fileSize = (int) testfile.length();
                  int nChunks = 0, readLength= size * 1024;

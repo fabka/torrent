@@ -35,7 +35,7 @@ public class Test {
   {
       Server server = new Server();
       Client client = new Client();
-      String nombre;
+      String nombre, path;
       InputStreamReader isr = new InputStreamReader(System.in);
       BufferedReader br = new BufferedReader(isr);
       int opcion = 0, tam; 
@@ -55,7 +55,9 @@ public class Test {
                nombre =br.readLine();
                System.out.println("Digite tamanio del archivo");
                tam = Integer.parseInt(br.readLine());
-              server.agregarArchivo(tam, nombre, this.ip, this.host);
+               System.out.println("Digite el path del archivo");
+               path =br.readLine();
+              server.agregarArchivo(tam, nombre, this.ip, this.host, path);
           }
           case 2 :
           {
