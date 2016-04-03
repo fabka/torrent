@@ -22,17 +22,22 @@ public class Hash {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        FileInputStream fis;
+        
+        
+    }
+    
+    public static String md5 (String ruta){
         try {
-            fis = new FileInputStream(new File("Lenguajes de programación RP.pptx"));
+            FileInputStream fis;
+            fis = new FileInputStream(new File(ruta));
             String md5 = org.apache.commons.codec.digest.DigestUtils.md5Hex(fis);
-            System.out.println("md5 = "+md5);
             fis.close();
+            return md5;
         } catch (FileNotFoundException ex) {
             Logger.getLogger(Hash.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
             Logger.getLogger(Hash.class.getName()).log(Level.SEVERE, null, ex);
         }
+        return null;
     }
-    
 }
