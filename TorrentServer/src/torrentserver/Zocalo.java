@@ -6,6 +6,7 @@
 package torrentserver;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  *
@@ -35,6 +36,23 @@ public class Zocalo implements Serializable{
     public void setPuerto(String puerto) {
         this.puerto = puerto;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if( obj instanceof Zocalo ){
+            Zocalo z = (Zocalo)obj;
+            return this.ip.equals(z.getIp()) && this.puerto.equals(z.getPuerto());
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 41 * hash + Objects.hashCode(this.ip);
+        hash = 41 * hash + Objects.hashCode(this.puerto);
+        return hash;
+    }
     
-    
+        
 }

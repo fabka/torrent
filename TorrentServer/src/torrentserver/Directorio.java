@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  *
@@ -68,6 +67,7 @@ public final class Directorio{
     public Archivo obtenerArchivo( String nombre ){
         for( Archivo a: directorio.keySet() ){
             if(a.getNombre().equals(nombre))
+                
                 return a;
         }
         return null;
@@ -111,7 +111,9 @@ public final class Directorio{
             if(!archivosDisponibles.contains(this.archivo)){
                 new AnadirAchivo(this.archivo);
             }
-            directorio.get(this.archivo).add(zocalo);
+            ArrayList<Zocalo> zocalos = directorio.get(archivo);
+            if( !zocalos.contains(this.zocalo))    
+                directorio.get(this.archivo).add(zocalo);
         }
     }
     

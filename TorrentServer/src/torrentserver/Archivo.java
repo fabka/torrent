@@ -16,12 +16,16 @@ public class Archivo implements Serializable{
     private String hash;
     private String nombre;
     private double peso;
+   
     
     Archivo(){
     }
     
     int numeroPartes(){
-        return ((int)peso)+1;
+        int partes = ((int)(peso/2048))+1;
+        if (partes > 50)
+            return 50;
+        return partes;
     }
     
     Archivo(String hash){
@@ -33,11 +37,12 @@ public class Archivo implements Serializable{
         this.hash = hash;
         this.peso = peso;
     }
-    
+     
     public String getHash() {
         return hash;
     }
 
+    
     public double getPeso() {
         return peso;
     }
