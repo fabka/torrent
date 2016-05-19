@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package torrentserver;
+package rmiServer;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -11,10 +11,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.*;
+import java.util.concurrent.*;
+import torrentserver.*;
 
 /**
  *
@@ -56,16 +55,20 @@ public final class Directorio{
         }
     }    
     
-    public void anadirZocalo ( String nombre, String hash, double peso,String ip, String puerto ){
-        new AnadirZocalo(new Archivo(nombre, hash, peso), new Zocalo(ip, puerto));
+    public void anadirZocalo ( String nombre, String hash, double peso, String ip, int puerto ){
+        Archivo a = new Archivo(nombre, hash, peso);
+        Zocalo z = new Zocalo(ip, puerto); 
+        new AnadirZocalo(a, z);
     }
     
     public ArrayList<Archivo> obtenerArchivos(){
-        return new ArrayList<>(directorio.keySet());
+        Set<Archivo> keySet = directorio.keySet();
+        return new ArrayList<>(keySet);
     }
     
     public Archivo obtenerArchivo( String nombre ){
-        for( Archivo a: directorio.keySet() ){
+        Set<Archivo> keySet = directorio.keySet();
+        for( Archivo a: keySet ){
             if(a.getNombre().equals(nombre))
                 
                 return a;
@@ -74,7 +77,8 @@ public final class Directorio{
     }
     
     public ArrayList<Zocalo> obtenerListaZocalos(String hash){
-        for( Archivo a: directorio.keySet() ){
+        Set<Archivo> keySet = directorio.keySet();
+        for( Archivo a: keySet ){
             if(a.getHash().equals(hash))
                 return directorio.get(a);
         }

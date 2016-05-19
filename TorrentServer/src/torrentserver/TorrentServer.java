@@ -5,6 +5,9 @@
  */
 package torrentserver;
 
+import static java.lang.Compiler.command;
+import rmiServer.Directorio;
+
 /**
  *
  * @author Fabi
@@ -15,15 +18,11 @@ public class TorrentServer implements Runnable{
 
     public TorrentServer() {
     }
-        
-    /**
-     * @param args the command line arguments
-     
-    public static void main(String[] args) {
+    
+    /*public static void main(String[] args) {
         TorrentServer torrentServer = new TorrentServer();
-    }
-         */
-
+    }*/
+       
     @Override
     public void run() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.

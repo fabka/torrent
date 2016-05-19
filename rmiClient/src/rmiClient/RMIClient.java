@@ -1,3 +1,5 @@
+package rmiClient;
+
 
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -24,8 +26,6 @@ public class RMIClient {
             Registry reg = LocateRegistry.getRegistry("localhost",1099);
             RMI rmi = (RMI)reg.lookup("server");
             System.out.println("Conecting to server...");
-            int test = rmi.suma(2,3);
-            System.out.println(test+"");
         } catch (Exception e) {
             
         }

@@ -7,6 +7,7 @@ package rmitest;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 
 /**
  *
@@ -14,6 +15,17 @@ import java.rmi.RemoteException;
  */
 public interface RMI extends Remote {
     
-    public int suma(int a, int b) throws RemoteException;
+    public void agregar(String nombre, String hash, double peso, String ip, int puerto);
     
+    public ArrayList<Archivo> archivosDisponibles();
+    
+    public void obtenerArchivo(String nombre); //Pendiente de tipo de dato del retorno.
+    
+    public void verDirectorio(); //Pendiente de tipo de dato del retorno.
+   
+    public boolean agregarUsuario( String username, String password );
+    
+    public boolean iniciarSesion( String username, String password );
+    
+    public boolean cerrarSesion( String username );
 }

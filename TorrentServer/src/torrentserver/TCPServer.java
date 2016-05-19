@@ -3,6 +3,7 @@ import java.net.*;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Set;
+import rmiServer.Directorio;
 public class TCPServer {
     
     public static void main (String args[]) {
@@ -54,7 +55,7 @@ class Connection extends Thread {
                         ip = in.readUTF();
                         puerto = in.readUTF();
                         System.out.println(nombre+","+ hash+","+ Double.parseDouble(peso_string)+","+ip+","+puerto);
-                        directorio.anadirZocalo(nombre, hash, Double.parseDouble(peso_string), ip, puerto);
+                        directorio.anadirZocalo(nombre, hash, Double.parseDouble(peso_string), ip, Integer.parseInt(puerto));
                         directorio.save();
                         System.out.println("Se añadio el archivo "+nombre+" correctamente");
                         break;

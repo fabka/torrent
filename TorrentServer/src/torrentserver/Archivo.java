@@ -18,7 +18,7 @@ public class Archivo implements Serializable{
     private double peso;
    
     
-    Archivo(){
+    public Archivo(){
     }
     
     int numeroPartes(){
@@ -28,11 +28,11 @@ public class Archivo implements Serializable{
         return partes;
     }
     
-    Archivo(String hash){
+    public Archivo(String hash){
         this.hash = hash;
     }
     
-    Archivo(String nombre, String hash, double peso){
+    public Archivo(String nombre, String hash, double peso){
         this.nombre = nombre;
         this.hash = hash;
         this.peso = peso;
