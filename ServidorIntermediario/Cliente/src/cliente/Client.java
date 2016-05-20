@@ -6,14 +6,14 @@
 package cliente;
 
 //import Manejador.TCPClient;
-import cliente.Server.Connection;
+import coordinador.RMI;
 import java.io.*;
 import java.net.*;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import java.util.logging.Level;
-import java.util.concurrent.ThreadLocalRandom;
 import java.util.logging.Logger;
 
 
@@ -26,16 +26,32 @@ public class Client  {
  private  int serverPort = 7895 ;
   private  int serverPortS = 7896 ;
  private String host = "localhost";
+ public String idUsuario ;
+ public String password;
 
  private String ipS = "169.254.187.48";
 
 
 
-//-------------------------------------------------------------------------------------------------------
-//conectarse con el directorio
+//------------------------------------------------------------------------------
+    private void Descargar() {
+        try {
+            Registry reg = LocateRegistry.getRegistry(host,1099);
+            RMI rmi = (RMI)reg.lookup("server");
+            System.out.println("Conecting to server...");
+         //   int test = rmi.descargar("nombre");
+           // System.out.println(test+"");
+        } catch (Exception e) {
+            
+        }
+    } 
+ //_----------------------------------------------------------------------------
 public int pedirDirectorio (String archivo)
  {
-    ArrayList<Zocalo> servidores = new ArrayList<>();
+  
+     /*
+     
+     ArrayList<Zocalo> servidores = new ArrayList<>();
     Zocalo z= new Zocalo();
     String hash = null;
     DataInputStream in ;
@@ -68,13 +84,13 @@ public int pedirDirectorio (String archivo)
     }
     //Se llaama a la funcion que buscara los servidores donde debe descargar
 
-    descargar(servidores, 1, partes, archivo, hash);
+    descargar(servidores, 1, partes, archivo, hash);*/
  return 1;
  }
 //-------------------------------------------------------------------------------------------------------
    public void agregarArchivo(double size, String name, String ip, String port, String path)
    {
-
+/*
        Archivo a = new Archivo(name, size, path);
 
        try {
@@ -92,14 +108,15 @@ public int pedirDirectorio (String archivo)
            out.close();
        } catch (IOException ex) {
            Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
-       }
+       }*/
    }
 
 //---------------------------------------------------------------------------------
 //conectarse con el directorio
 public  ArrayList<String>  pedirTodos ()
  {
-    ArrayList<String> archivos = new ArrayList<>();
+     return null;
+  /*  ArrayList<String> archivos = new ArrayList<>();
     DataInputStream in ;
     DataOutputStream out ;
     String aux;
@@ -123,7 +140,7 @@ public  ArrayList<String>  pedirTodos ()
       Logger.getLogger(Connection.class.getName()).log(Level.SEVERE, null, ex);
 
     }
-    return archivos;
+    return archivos;*/
  }
  //------------------------------------------------------------------------------------------------------
 public boolean verificarConexion(InetAddress ip)
@@ -142,7 +159,7 @@ public boolean verificarConexion(InetAddress ip)
  //------------------------------------------------------------------------------------------------------
 public void descargar (List<Zocalo> servidores, int tam, int partes, String nombre, String hash)
 {
-    System.out.println("El numero de partes segun el directorio"+partes);
+    /*System.out.println("El numero de partes segun el directorio"+partes);
        Socket s = null;
        int numbytes, actual,i, servidor, bytesRead,tamfinal=0;
        FileOutputStream fos =null;
@@ -198,10 +215,16 @@ public void descargar (List<Zocalo> servidores, int tam, int partes, String nomb
      } catch (UnknownHostException ex) {
          Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
      }
-
+*/
 }
 
 //-------------------------------------------------------------------------------------------------------
+public  void iniciarSesion()
+{
+      System.out.println("Ingrese su cedula ");
+      System.out.println("1. Agregar archivo ");
+      System.out.println("2. Crear transaccion");
+}
 }
 
 

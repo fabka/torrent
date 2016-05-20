@@ -5,16 +5,28 @@
  */
 package cliente;
 
+import java.io.Serializable;
 import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
  * @author Fabi
  */
-public class Zocalo {
+public class Zocalo implements Serializable {
     private InetAddress ip;
     private String puerto;
 
+    public Zocalo(String ip, String puerto) {
+        try {
+            this.puerto = puerto;
+            this.ip = InetAddress.getByName(ip);
+        } catch (UnknownHostException ex) {
+          //  Logger.getLogger(Zocalo.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 
     public InetAddress getIp() {
         return ip;

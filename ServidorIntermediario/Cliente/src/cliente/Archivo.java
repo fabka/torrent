@@ -19,17 +19,24 @@ import java.util.logging.Logger;
  * @author redes
  */
 public class Archivo implements Serializable {
+
     private String nombre;
     private String hash;
     private double peso;
 
-    Archivo(){
+    public Archivo() {
     }
 
-    Archivo(String nombre, double peso, String path){
+    public Archivo(String nombre, double peso, String path) {
         this.nombre = nombre;
         this.peso = peso;
         this.hash = md5(path);
+    }
+
+    public Archivo(String nombre, String hash, double peso) {
+        this.nombre = nombre;
+        this.peso = peso;
+        this.hash = hash;
     }
 
     public String getNombre() {
@@ -39,9 +46,11 @@ public class Archivo implements Serializable {
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
+
     public void setPeso(double peso) {
         this.peso = peso;
     }
+
     public String getHash() {
         return hash;
     }
@@ -54,13 +63,14 @@ public class Archivo implements Serializable {
         return peso;
     }
 
-    public String md5 (String ruta){
+    public String md5(String ruta) {
 
-        File f = new File (ruta);
+        File f = new File(ruta);
         FileInputStream fis;
         try {
-            if(!f.exists())
+            if (!f.exists()) {
                 f.createNewFile();
+            }
             fis = new FileInputStream(new File(ruta));
             String md5 = org.apache.commons.codec.digest.DigestUtils.md5Hex(fis);
             fis.close();
@@ -71,5 +81,10 @@ public class Archivo implements Serializable {
             Logger.getLogger(Archivo.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
+    }
+
+    @Override
+    public String toString() {
+        return nombre;
     }
 }
