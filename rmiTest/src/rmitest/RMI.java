@@ -13,7 +13,6 @@ import java.rmi.RemoteException;
  * @author Monica
  */
 public interface RMI extends Remote {
-    
-    public int suma(int a, int b) throws RemoteException;
-    
+        
+    public void actualizarArchivo(String nombre, int fileLength, byte[] bytedFile) throws RemoteException;
 }
